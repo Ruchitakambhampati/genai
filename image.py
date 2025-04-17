@@ -1,5 +1,7 @@
 import os
 os.environ["STREAMLIT_WATCHER_TYPE"] = "none"
+os.environ["PYTORCH_JIT"] = "0"  # optional: disables JIT which may help
+
 import streamlit as st
 import torch
 from PIL import Image, ImageEnhance
@@ -8,6 +10,13 @@ from datetime import datetime
 import pytesseract
 import base64
 from transformers import BlipProcessor, BlipForConditionalGeneration
+import asyncio
+
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 
 # Load the BLIP model and processor
 processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
